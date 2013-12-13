@@ -1,10 +1,10 @@
 import sys
-from xbee import ZigBee
 import serial
+from xbee import ZigBee
 
 ser = serial.Serial('COM5', 19200)
 
-xbee = ZigBee(ser)
+xbee = ZigBee(ser, escaped=True)
 
 while True:
     try:

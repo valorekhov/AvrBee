@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>587e59b2-c847-4c6b-8135-631cd24f4ddb</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Arduino_Xbee_Programmer.py</StartupFile>
+    <StartupFile>tests.py</StartupFile>
     <SearchPath>XBee-2.1.0;XBee-2.1.0\xbee</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -21,7 +21,22 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Arduino_Xbee_Programmer.py" />
+    <Compile Include="arduinoXbeeProgrammer\Arduino_Xbee_Programmer.py" />
+    <Compile Include="arduinoXbeeProgrammer\FileReader.py" />
+    <Compile Include="arduinoXbeeProgrammer\tests\test_readHexFile.py" />
+    <Compile Include="arduinoXbeeProgrammer\tests\__init__.py" />
+    <Compile Include="arduinoXbeeProgrammer\__init__.py" />
+    <Compile Include="setup.py" />
+    <Compile Include="tests.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="arduinoXbeeProgrammer\" />
+    <Folder Include="arduinoXbeeProgrammer\tests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="arduinoXbeeProgrammer\tests\MyBlink.cpp.hex" />
+    <Content Include="LICENSE.txt" />
+    <Content Include="README.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
 </Project>
