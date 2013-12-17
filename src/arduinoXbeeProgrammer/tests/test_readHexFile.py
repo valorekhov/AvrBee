@@ -3,7 +3,6 @@ from arduinoXbeeProgrammer.FileReader import HexFileReader
 
 class TestHexFileReader(unittest.TestCase):
     def test_Read(self):
-
         reader = HexFileReader( os.path.join(os.path.dirname(__file__), "MyBlink.cpp.hex" ) )
         instructions = reader.get_bytes();
         self.assertEqual(69, len(instructions))

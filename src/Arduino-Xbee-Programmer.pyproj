@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>587e59b2-c847-4c6b-8135-631cd24f4ddb</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>tests.py</StartupFile>
+    <StartupFile>arduinoXbeeProgrammer\main.py</StartupFile>
     <SearchPath>XBee-2.1.0;XBee-2.1.0\xbee</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -21,8 +21,14 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="arduinoXbeeProgrammer\Arduino_Xbee_Programmer.py" />
+    <Compile Include="arduinoXbeeProgrammer\ArduinoXbeeApiModeProgrammer.py" />
+    <Compile Include="arduinoXbeeProgrammer\main.py" />
+    <Compile Include="arduinoXbeeProgrammer\AvrConstants.py" />
     <Compile Include="arduinoXbeeProgrammer\FileReader.py" />
+    <Compile Include="arduinoXbeeProgrammer\XbeeWrapper.py" />
+    <Compile Include="arduinoXbeeProgrammer\StkXbeeApiModeProgrammer.py" />
+    <Compile Include="arduinoXbeeProgrammer\tests\Fake.py" />
+    <Compile Include="arduinoXbeeProgrammer\tests\test_stkProto.py" />
     <Compile Include="arduinoXbeeProgrammer\tests\test_readHexFile.py" />
     <Compile Include="arduinoXbeeProgrammer\tests\__init__.py" />
     <Compile Include="arduinoXbeeProgrammer\__init__.py" />
