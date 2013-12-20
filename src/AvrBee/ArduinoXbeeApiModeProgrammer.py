@@ -1,5 +1,5 @@
 from AVR_ISP_Flow import AVR_ISP_Flow
-from FileReader import HexFileReader
+from FileReader import HexFileFormat
 import time
 
 
@@ -24,7 +24,7 @@ class ArduinoXbeeApiModeProgrammer(object):
     def upload(self, filePath):
         self.resolveTarget()
 
-        reader = HexFileReader(filePath)
+        reader = HexFileFormat(filePath)
         lines = reader.get_bytes()
 
         programmer = AVR_ISP_Flow(self.xbee)

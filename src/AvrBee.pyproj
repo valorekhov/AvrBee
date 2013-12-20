@@ -24,12 +24,12 @@
     <Compile Include="AvrBee\ArduinoXbeeApiModeProgrammer.py" />
     <Compile Include="AvrBee\main.py" />
     <Compile Include="AvrBee\AvrConstants.py" />
-    <Compile Include="AvrBee\FileReader.py" />
+    <Compile Include="AvrBee\HexFileFormat.py" />
     <Compile Include="AvrBee\XbeeWrapper.py" />
     <Compile Include="AvrBee\AvrIspFlow.py" />
     <Compile Include="AvrBee\tests\Fake.py" />
     <Compile Include="AvrBee\tests\test_stkProto.py" />
-    <Compile Include="AvrBee\tests\test_readHexFile.py" />
+    <Compile Include="AvrBee\tests\test_hexFile.py" />
     <Compile Include="AvrBee\tests\__init__.py" />
     <Compile Include="AvrBee\__init__.py" />
     <Compile Include="setup.py" />
