@@ -9,10 +9,13 @@ class FakeXBee(object):
         self.sentFrames = list()
         
     def wait_read_frame(self):
-        return APIFrame(self.data)
+        return {'rf_data': self.data}
 
     def send(self, cmd, **kwargs):
         self.sentFrames.append((cmd, kwargs))
+
+    def tx(self, **kwargs):
+        self.sentFrames.append(('tx', kwargs))
 
 class FakeDevice(object):
     """

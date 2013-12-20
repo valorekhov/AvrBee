@@ -1,5 +1,5 @@
 import unittest, sys, os
-from arduinoXbeeProgrammer.FileReader import HexFileReader
+from AvrBee.FileReader import HexFileReader
 
 class TestHexFileReader(unittest.TestCase):
     def test_Read(self):

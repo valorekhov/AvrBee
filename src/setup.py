@@ -1,12 +1,12 @@
 from distutils.core import setup
 
 packages=[
-    'arduinoXbeeProgrammer', 
-    'arduinoXbeeProgrammer.tests', 
+    'AvrBee', 
+    'AvrBee.tests', 
 ]
 
 setup(
-    name='Arduino XBee Programmer',
+    name='Arduino AVR XBee Programmer',
     version='1.1.0',
     author='Val Orekhov',
     author_email='valorekhov@gmail.com',

@@ -1,8 +1,8 @@
 from array import array
-from AvrConstants import *
+from AvrBee.AvrConstants import *
 import time
 
-class AVR_ISP_Flow(object):
+class AvrIspFlow(object):
     """Programs using STK500 protocol via attached XBEE in API mode"""
     def __init__(self, deviceWrapper):
         self.device = deviceWrapper

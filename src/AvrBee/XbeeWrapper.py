@@ -5,6 +5,8 @@ class XbeeWrapper(object):
     def __init__(self, device):
         self.device = device
         self.counter = 1;
+        self.addr = [0,0]
+        self.addrLong = [0,0,0,0,0,0,0,0]
 
     def getFrameId(self):
         self.counter += 1

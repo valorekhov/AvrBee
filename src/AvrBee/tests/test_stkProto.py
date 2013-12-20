@@ -1,7 +1,8 @@
 import unittest, sys, os
-from arduinoXbeeProgrammer.StkXbeeApiModeProgrammer import StkXbeeApiModeProgrammer, XbeeWrapper
-from arduinoXbeeProgrammer.tests.Fake import *
-from arduinoXbeeProgrammer.AvrConstants import *
+from AvrBee.AvrIspFlow import AvrIspFlow
+from AvrBee.XbeeWrapper import XbeeWrapper
+from AvrBee.tests.Fake import *
+from AvrBee.AvrConstants import *
 from xbee import XBee
 from array import array
 
@@ -10,7 +11,7 @@ class TestStkProto(unittest.TestCase):
     def test_StkSender(self):        
         xbee = FakeXBee(b'\x14\x10') #AvrConstants.STK_INSYNC, STK_OK
         adapter = XbeeWrapper(xbee)
-        stk = StkXbeeApiModeProgrammer(adapter)
+        stk = AvrIspFlow(adapter)
         payload = B'Foo Bar'
         stk.writeRomPage(0x0010, payload)
         command, args = xbee.sentFrames[0]
