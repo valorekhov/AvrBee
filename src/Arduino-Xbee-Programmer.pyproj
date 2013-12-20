@@ -26,7 +26,7 @@
     <Compile Include="arduinoXbeeProgrammer\AvrConstants.py" />
     <Compile Include="arduinoXbeeProgrammer\FileReader.py" />
     <Compile Include="arduinoXbeeProgrammer\XbeeWrapper.py" />
-    <Compile Include="arduinoXbeeProgrammer\StkXbeeApiModeProgrammer.py" />
+    <Compile Include="arduinoXbeeProgrammer\AVR_ISP_Flow.py" />
     <Compile Include="arduinoXbeeProgrammer\tests\Fake.py" />
     <Compile Include="arduinoXbeeProgrammer\tests\test_stkProto.py" />
     <Compile Include="arduinoXbeeProgrammer\tests\test_readHexFile.py" />

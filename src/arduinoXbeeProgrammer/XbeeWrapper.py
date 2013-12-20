@@ -4,22 +4,25 @@ import struct
 class XbeeWrapper(object):
     def __init__(self, device):
         self.device = device
+        self.counter = 1;
 
-    def togglePin(self, target, pinNumber):
+    def getFrameId(self):
+        self.counter += 1
+        return bytearray([self.counter]);
 
-        self.device.send('tx', frame_id=b'\0', dest_addr_long=struct.pack('>Q', 0), dest_addr = target, data=b'xig://time\n') #ATDx 5 = LOW state on remote digital pin X
+    def resolve(self, name):
+        self.device.send('at', frame_id=self.getFrameId(), command=b'DN', parameter=bytearray(name, 'latin1')) 
         frame = self.device.wait_read_frame()
-        self.addrLong = frame['source_addr_long']
-        self.addr = target
+        bytes = frame['parameter']
+        self.addr = bytes[0:2]
+        self.addrLong = bytes[2:]
 
-        #move Long Address detection after pin toggle ops
-
-        cmd = bytearray('D' + str(pinNumber), 'latin1')
-        self.device.send('remote_at', frame_id=b'\0', dest_addr = target, command=cmd, parameter=b'5') #ATDx 5 = HIGH state on remote digital pin X
-        self.device.wait_read_frame()
-
-        self.device.send('remote_at', frame_id=b'\1', dest_addr = target, command=cmd, parameter=b'4') #ATDx 4 = LOW state on remote digital pin X
-        self.device.wait_read_frame()
+    def setPinMode(self, pin, mode):
+        cmd = bytearray(str(pin), 'latin1')
+        setting = bytearray([mode])
+        self.device.remote_at(frame_id=self.getFrameId(), dest_addr_long = self.addrLong, command=cmd, parameter=setting) 
+        frame = self.device.wait_read_frame()
+        return frame['status'] == 0
 
     def sendBytes(self, *args):
         arr = bytearray()
@@ -32,10 +35,17 @@ class XbeeWrapper(object):
                      arr.append(arg & 0xFF)
                  else:
                      raise Exception("Unsupported arg type: " + arg)
-        len(arr)           
-        self.device.send("tx", dest_addr_long=self.addrLong, dest_addr = self.addr, data=arr)
 
-    def getBytes(self):
+        self.device.tx(frame_id = self.getFrameId(), dest_addr_long=self.addrLong, dest_addr=self.addr, data=arr)
         frame = self.device.wait_read_frame()
-        return frame.data
+        return frame.get('deliver_status') == 0
+
+    def getBytes(self, terminatorChar=0x10):
+        ret = bytearray([0])
+        while not ret[-1] == terminatorChar:
+            frame = self.device.wait_read_frame()
+            print(frame)
+            ret += frame["rf_data"]
+
+        return ret[1:-1]
 
