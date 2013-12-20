@@ -1,16 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>587e59b2-c847-4c6b-8135-631cd24f4ddb</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>arduinoXbeeProgrammer\main.py</StartupFile>
+    <StartupFile>AvrBee\main.py</StartupFile>
     <SearchPath>XBee-2.1.0;XBee-2.1.0\xbee</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>Arduino-Xbee-Programmer</Name>
-    <RootNamespace>Arduino-Xbee-Programmer</RootNamespace>
+    <Name>AvrBee</Name>
+    <RootNamespace>AvrBee</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,26 +21,26 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="arduinoXbeeProgrammer\ArduinoXbeeApiModeProgrammer.py" />
-    <Compile Include="arduinoXbeeProgrammer\main.py" />
-    <Compile Include="arduinoXbeeProgrammer\AvrConstants.py" />
-    <Compile Include="arduinoXbeeProgrammer\FileReader.py" />
-    <Compile Include="arduinoXbeeProgrammer\XbeeWrapper.py" />
-    <Compile Include="arduinoXbeeProgrammer\AVR_ISP_Flow.py" />
-    <Compile Include="arduinoXbeeProgrammer\tests\Fake.py" />
-    <Compile Include="arduinoXbeeProgrammer\tests\test_stkProto.py" />
-    <Compile Include="arduinoXbeeProgrammer\tests\test_readHexFile.py" />
-    <Compile Include="arduinoXbeeProgrammer\tests\__init__.py" />
-    <Compile Include="arduinoXbeeProgrammer\__init__.py" />
+    <Compile Include="AvrBee\ArduinoXbeeApiModeProgrammer.py" />
+    <Compile Include="AvrBee\main.py" />
+    <Compile Include="AvrBee\AvrConstants.py" />
+    <Compile Include="AvrBee\FileReader.py" />
+    <Compile Include="AvrBee\XbeeWrapper.py" />
+    <Compile Include="AvrBee\AVR_ISP_Flow.py" />
+    <Compile Include="AvrBee\tests\Fake.py" />
+    <Compile Include="AvrBee\tests\test_stkProto.py" />
+    <Compile Include="AvrBee\tests\test_readHexFile.py" />
+    <Compile Include="AvrBee\tests\__init__.py" />
+    <Compile Include="AvrBee\__init__.py" />
     <Compile Include="setup.py" />
     <Compile Include="tests.py" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="arduinoXbeeProgrammer\" />
-    <Folder Include="arduinoXbeeProgrammer\tests\" />
+    <Folder Include="AvrBee\" />
+    <Folder Include="AvrBee\tests\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="arduinoXbeeProgrammer\tests\MyBlink.cpp.hex" />
+    <Content Include="AvrBee\tests\MyBlink.cpp.hex" />
     <Content Include="LICENSE.txt" />
     <Content Include="README.txt" />
   </ItemGroup>
