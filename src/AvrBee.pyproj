@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>587e59b2-c847-4c6b-8135-631cd24f4ddb</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>tests.py</StartupFile>
+    <StartupFile>AvrBee\main.py</StartupFile>
     <SearchPath>XBee-2.1.0;XBee-2.1.0\xbee</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>

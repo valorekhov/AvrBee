@@ -51,3 +51,12 @@ class XbeeWrapper(object):
 
         return ret[1:-1]
 
+    def getBytesLong(self, expectedBytes):
+        ret = bytearray()
+        while len(ret) < expectedBytes:
+            frame = self.device.wait_read_frame()
+            ret += frame["rf_data"]
+
+        return ret
+
+

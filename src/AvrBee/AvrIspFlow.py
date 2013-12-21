@@ -1,5 +1,5 @@
 from array import array
-from AvrBee.AvrConstants import *
+from AvrConstants import *
 import time
 
 class AvrIspFlow(object):
@@ -20,13 +20,14 @@ class AvrIspFlow(object):
 
     def readPage(self, length):
         self.device.sendBytes(AvrConstants.STK_READ_PAGE, 0, length & 0xff, 0, AvrConstants.CRC_EOP)
-        return self.device.getBytes()[1:]
+        return self.device.getBytesLong(length+2)[1:-1]
 
     def writeRomPage(self, address, bytes):
         self.loadAddress(address)
         self.progPage(bytes)
 
     def readRomPage(self, address, length=64):
+        print("reading address=" + hex(address))
         self.loadAddress(address)
         return self.readPage(length)
 

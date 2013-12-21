@@ -1,5 +1,5 @@
-from AVR_ISP_Flow import AVR_ISP_Flow
-from FileReader import HexFileFormat
+from AvrIspFlow import *
+from HexFileFormat import HexFileFormat
 import time
 
 
@@ -33,9 +33,6 @@ class ArduinoXbeeApiModeProgrammer(object):
 
         programmer.getTargetParameters()
 
-        print(programmer.readRomPage(0, 128))
-        return
-
         programmer.enterProgMode()
 
 #        for (address, data) in lines:
@@ -45,4 +42,31 @@ class ArduinoXbeeApiModeProgrammer(object):
         self.restoreTarget()
 
         pass
+
+    def download(self, startAddress, length, filePath):
+        pageSize = min(240, length)
+        data = bytearray()
+        address = startAddress
+        pages = int(length / pageSize)
+
+        programmer = AvrIspFlow(self.xbee)
+        
+        self.resolveTarget()
+        self.resetTarget()
+        programmer.getTargetParameters()
+
+        for i in range(0, pages):
+            dataPage = programmer.readRomPage(address, pageSize)
+            if len(dataPage) < pageSize:
+                raise Exception("Read less bytes than the expected page size")
+            data += dataPage
+            address += pageSize
+
+        if pages * pageSize < length:
+            data += programmer.readRomPage(address, length - pages * pageSize)
+
+        self.restoreTarget()
+
+        writer = HexFileFormat(filePath)
+        wrtier.save_bytes(startAddress, data)
     
