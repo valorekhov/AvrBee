@@ -40,6 +40,7 @@
     <Folder Include="AvrBee\tests\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AvrBee\tests\backup - Copy.hex" />
     <Content Include="AvrBee\tests\MyBlink.cpp.hex" />
     <Content Include="LICENSE.txt" />
     <Content Include="README.txt" />

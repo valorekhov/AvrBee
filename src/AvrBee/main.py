@@ -15,9 +15,11 @@ adapter = XbeeWrapper(xbee)
 prog = ArduinoXbeeApiModeProgrammer(adapter, 'Weather')
 path = os.path.join(os.path.dirname(__file__), "tests\MyBlink.cpp.hex" )
 
-prog.download( 0, 32*1024, os.path.join(os.path.dirname(__file__), "tests\backup.hex" ) )
 
-#prog.upload(path)
+prog.upload(path)
+
+#prog.download(0, 1024, os.path.join(os.path.dirname(__file__), "tests\\backup.hex" ) )
+
 
 
 ser.close()

@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 import array
 import struct
-import binascii, os
+import binascii, os, sys
 
 class HexFileFormat(object):
     """Parses out Hex File format into a byte stream"""
@@ -39,12 +39,12 @@ class HexFileFormat(object):
         return ret
 
     def save_bytes(self, data, startAddress = 0):
-            f = open(self.path) if self.file == None else self.file
+            f = open(self.path, 'w') if self.file == None else self.file
 
             pageSize = 16
             length = len(data)
             address = startAddress
-            pages = length / 16 
+            pages = int(length / 16) 
             if pages > int(pages):
                 pages = int(pages) + 1
 
