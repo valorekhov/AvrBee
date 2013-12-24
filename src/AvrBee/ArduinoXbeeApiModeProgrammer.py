@@ -10,21 +10,54 @@ class ArduinoXbeeApiModeProgrammer(object):
         self.xbee = xbee
 
     def resolveTarget(self):
+        print("Resolving target %s" % self.targetName)
         self.xbee.resolve(self.targetName)
+        print("Remote resolved as %s" % self.xbee.addrLong)
 
     def resetTarget(self):
         self.xbee.setPinMode(self.resetPin, 4) #first LOWER the pin if it was left HIGH
-        time.sleep(.2)                       #wait a sec to allow the capacitor to discharge
+        #time.sleep(.5)                       #wait a sec to allow the capacitor to discharge
         self.xbee.setPinMode(self.resetPin, 5) #set the reset pin to HIGH thus triggering Arduino reset
         #time.sleep(.5)
 
     def restoreTarget(self):
-        self.xbee.setPinMode(self.resetPin, 4) 
+        self.xbee.setPinMode(self.resetPin, 0) 
+
+        dh = self.remoteState.get('dh')
+        dl = self.remoteState.get('dl')
+
+        if dh or dl:
+            print("Restoring target the prior DH/DL: %s" %( dh + dl))
+
+            if dh:
+                self.xbee.remoteAt("DH", dh)
+            if dl:
+                self.xbee.remoteAt("DL", dl)
+
+            #self.xbee.remoteAt("WR")
+
+    def configureTarget(self):
+        self.remoteState = dict()
+
+        sh = self.xbee.localAt("SH")
+        sl = self.xbee.localAt("SL")
+
+        dh = self.xbee.remoteAt("DH")
+        dl = self.xbee.remoteAt("DL")
+
+        if dh != sh or dl != sl:
+            print("Setting target to the address of the programming XBee: %s" %( sh + sl))
+            self.xbee.remoteAt("DH", sh)
+            self.xbee.remoteAt("DL", sl)
+            #self.xbee.remoteAt("WR")
+            self.remoteState['dh'] = dh
+            self.remoteState['dl'] = dl
 
     def upload(self, filePath):
 
         flashPageSize = 128
         self.resolveTarget()
+
 
         reader = HexFileFormat(filePath)
         lines = reader.get_bytes()
@@ -36,44 +69,47 @@ class ArduinoXbeeApiModeProgrammer(object):
             toWrite += data
         length = len(toWrite)
 
-
         programmer = AvrIspFlow(self.xbee)
-        
-        self.resetTarget()                  #do not place any other actions after resetting the target
 
-        programmer.getTargetParameters()
+        print("configuring target addresses")
+        self.configureTarget()
 
-        programmer.enterProgMode()
-        pagesToWrite = length / flashPageSize
-        if pagesToWrite > int(pagesToWrite):
-            pagesToWrite = int(pagesToWrite) + 1        
-        for pageNo in range(0, pagesToWrite):
-            startByte = pageNo*flashPageSize
-            page = toWrite[startByte:startByte+flashPageSize]
-            if len(page) < flashPageSize:
-                for i in range(flashPageSize - len(page)):
-                    page += b'\xFF'
-            programmer.writeRomPage(startAddress + startByte, page)
+        try:
+            print("beginning programming sequence")
+            self.resetTarget()                  
 
-        programmer.leaveProgMode()
+            programmer.getTargetParameters()
+            programmer.enterProgMode()
+            print("ready for upload")
 
-        print("Verifying %d bytes beginning with start address 0x%x" % (length, startAddress))
-        readPages = bytearray()
-        readPageSize = 128
-        readPageNo = length / readPageSize
-        readPageWholeNo = int(readPageNo) +1
-        for i in range(0, readPageWholeNo):
-            readPages += programmer.readRomPage(startAddress + i*readPageSize, readPageSize)
+            pagesToWrite = length / flashPageSize
+            if pagesToWrite > int(pagesToWrite):
+                pagesToWrite = int(pagesToWrite) + 1        
+            for pageNo in range(0, int(pagesToWrite)):
+                startByte = pageNo*flashPageSize
+                page = toWrite[startByte:startByte+flashPageSize]
+                if len(page) < flashPageSize:
+                    for i in range(flashPageSize - len(page)):
+                        page += b'\xFF'
+                programmer.writeRomPage(startAddress + startByte, page)
 
-        readPages = readPages[:length]
+            programmer.leaveProgMode()
 
-        print(str(readPages))
-        print(str(len(readPages)))
+            print("Verifying %d bytes beginning with start address 0x%x" % (length, startAddress))
+            readPages = bytearray()
+            readPageSize = 128
+            readPageNo = length / readPageSize
+            readPageWholeNo = int(readPageNo) +1
+            for i in range(0, readPageWholeNo):
+                readPages += programmer.readRomPage(startAddress + i*readPageSize, readPageSize)
 
-        if readPages != toWrite:
-            raise Exception("Failed validation")
+            readPages = readPages[:length]
 
-        self.restoreTarget()
+            if readPages != toWrite:
+                raise Exception("Failed validation")
+
+        finally:
+            self.restoreTarget()
 
         pass
 

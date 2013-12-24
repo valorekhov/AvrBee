@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>587e59b2-c847-4c6b-8135-631cd24f4ddb</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>AvrBee\main.py</StartupFile>
+    <StartupFile>AvrBee\monitor.py</StartupFile>
     <SearchPath>XBee-2.1.0;XBee-2.1.0\xbee</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -22,6 +22,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AvrBee\ArduinoXbeeApiModeProgrammer.py" />
+    <Compile Include="AvrBee\monitor.py" />
     <Compile Include="AvrBee\main.py" />
     <Compile Include="AvrBee\AvrConstants.py" />
     <Compile Include="AvrBee\HexFileFormat.py" />
