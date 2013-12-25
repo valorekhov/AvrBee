@@ -1,7 +1,5 @@
-import sys, os, serial
+import serial
 from xbee import ZigBee
-from XbeeWrapper import XbeeWrapper
-from ArduinoXbeeApiModeProgrammer import ArduinoXbeeApiModeProgrammer
 
 ser = serial.Serial('COM5', 57600)
 xbee = ZigBee(ser, escaped=True)

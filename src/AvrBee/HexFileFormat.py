@@ -1,5 +1,4 @@
 from abc import ABCMeta, abstractmethod
-import array
 import struct
 import binascii, os, sys
 

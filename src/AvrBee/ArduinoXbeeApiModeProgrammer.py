@@ -1,6 +1,6 @@
+import select
 from AvrIspFlow import *
 from HexFileFormat import HexFileFormat
-import time
 
 
 class ArduinoXbeeApiModeProgrammer(object):
@@ -9,25 +9,28 @@ class ArduinoXbeeApiModeProgrammer(object):
         self.resetPin = resetPin       
         self.xbee = xbee
 
-    def resolveTarget(self):
-        print("Resolving target %s" % self.targetName)
-        self.xbee.resolve(self.targetName)
-        print("Remote resolved as %s" % self.xbee.addrLong)
+    def resolve_target(self):
+        if isinstance(self.targetName, (bytearray, bytes)):
+            print("Setting remote as %s" % self.targetName)
+            self.xbee.set_target_address_long(self.targetName)
+        else:
+            print("Resolving target %s" % self.targetName)
+            self.xbee.resolve(self.targetName)
+            print("Remote resolved as %s" % self.xbee.addrLong)
 
-    def resetTarget(self):
-        self.xbee.setPinMode(self.resetPin, 4) #first LOWER the pin if it was left HIGH
-        #time.sleep(.5)                       #wait a sec to allow the capacitor to discharge
-        self.xbee.setPinMode(self.resetPin, 5) #set the reset pin to HIGH thus triggering Arduino reset
-        #time.sleep(.5)
+    def reset_target(self):
+        self.xbee.setPinMode(self.resetPin, 4)  #first LOWER the pin if it was left HIGH
+        time.sleep(.2)                         #wait a sec to allow the capacitor to discharge
+        self.xbee.setPinMode(self.resetPin, 5)  #set the reset pin to HIGH thus triggering Arduino reset
 
-    def restoreTarget(self):
+    def restore_target(self):
         self.xbee.setPinMode(self.resetPin, 0) 
 
         dh = self.remoteState.get('dh')
         dl = self.remoteState.get('dl')
 
         if dh or dl:
-            print("Restoring target the prior DH/DL: %s" %( dh + dl))
+            print("Restoring target prior DH/DL: %s" %( dh + dl))
 
             if dh:
                 self.xbee.remoteAt("DH", dh)
@@ -36,11 +39,13 @@ class ArduinoXbeeApiModeProgrammer(object):
 
             #self.xbee.remoteAt("WR")
 
-    def configureTarget(self):
+    def configure_target(self):
         self.remoteState = dict()
 
         sh = self.xbee.localAt("SH")
         sl = self.xbee.localAt("SL")
+
+#        self.reset_target()             # reset the target to take advantage of the on delay to configure sleep settings
 
         dh = self.xbee.remoteAt("DH")
         dl = self.xbee.remoteAt("DL")
@@ -53,10 +58,24 @@ class ArduinoXbeeApiModeProgrammer(object):
             self.remoteState['dh'] = dh
             self.remoteState['dl'] = dl
 
+        return
+        rsm = self.xbee.remoteAt("SM")
+        rsp = self.xbee.remoteAt("SP")
+        rspI, = struct.unpack(">H", rsp)
+        rsmI = rsm[0]
+        if rsmI in (1,2,3,5) or (rsmI == 4 and rspI > 10):
+            print("Target is configured for sleep. Disabling this for the time of the upload...")
+            if rsmI != 4:
+                self.xbee.remoteAt("SM", 4)
+            self.xbee.remoteAt("SP", b'\0\33')
+            self.remoteState['sm'] = rsm
+            self.remoteState['sp'] = rsp
+
+
     def upload(self, filePath):
 
         flashPageSize = 128
-        self.resolveTarget()
+        self.resolve_target()
 
 
         reader = HexFileFormat(filePath)
@@ -64,7 +83,7 @@ class ArduinoXbeeApiModeProgrammer(object):
 
         startAddress, foo = lines[0]
         toWrite = bytearray()
-        length = 0
+
         for (address, data) in lines:
             toWrite += data
         length = len(toWrite)
@@ -72,13 +91,14 @@ class ArduinoXbeeApiModeProgrammer(object):
         programmer = AvrIspFlow(self.xbee)
 
         print("configuring target addresses")
-        self.configureTarget()
+
+        self.configure_target()
 
         try:
-            print("beginning programming sequence")
-            self.resetTarget()                  
-
+            print("resetting target")
+            self.reset_target()
             programmer.getTargetParameters()
+            print("beginning programming sequence")
             programmer.enterProgMode()
             print("ready for upload")
 
@@ -109,7 +129,7 @@ class ArduinoXbeeApiModeProgrammer(object):
                 raise Exception("Failed validation")
 
         finally:
-            self.restoreTarget()
+            self.restore_target()
 
         pass
 
@@ -121,8 +141,8 @@ class ArduinoXbeeApiModeProgrammer(object):
 
         programmer = AvrIspFlow(self.xbee)
         
-        self.resolveTarget()
-        self.resetTarget()
+        self.resolve_target()
+        self.reset_target()
         programmer.getTargetParameters()
 
         for i in range(0, pages):
@@ -137,7 +157,7 @@ class ArduinoXbeeApiModeProgrammer(object):
             print("reading remainder " + str(remainder))
             data += programmer.readRomPage(address, remainder)
 
-        self.restoreTarget()
+        self.restore_target()
 
         writer = HexFileFormat(filePath)
         writer.save_bytes(data, startAddress)
